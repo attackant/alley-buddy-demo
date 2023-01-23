@@ -1,6 +1,6 @@
 - pipeline: "Pull Request Tests"
   trigger_mode: "ON_EVERY_PUSH"
-  ref_name: "refs/pull/*"
+  ref_name: "refs/heads/master"
   ref_type: "WILDCARD"
   priority: "NORMAL"
   target_site_url: "https://alley.co"
