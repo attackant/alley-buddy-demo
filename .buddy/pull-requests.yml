@@ -10,29 +10,29 @@
   actions:
     - action: "Gitignored files check"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/wordpress"
       docker_image_tag: "latest"
       execute_commands:
         - "if [[ ! -z $(git ls-files -i --exclude-standard) ]]; then exit 1; fi"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ALWAYS"
       shell: "BASH"
     - action: "Check for git conflicts"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/wordpress"
       docker_image_tag: "latest"
       execute_commands:
         - "! git grep -E \"<<<<<<< |>>>>>>> \" -- './*' ':!buddy.yml' ':!.buddy/*'"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ALWAYS"
       shell: "BASH"
     - action: "Composer install"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/wordpress"
       docker_image_tag: "latest"
       execute_commands:
@@ -40,12 +40,12 @@
       setup_commands:
         - "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ALWAYS"
       shell: "BASH"
     - action: "composer phpcs: plugin"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/wordpress"
       docker_image_tag: "latest"
       execute_commands:
@@ -53,7 +53,7 @@
       setup_commands:
         - "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ON_CHANGE_AT_PATH"
       trigger_condition_paths:
         - "plugins/example-plugin"
@@ -61,7 +61,7 @@
       run_next_parallel: true
     - action: "composer phpcs: theme"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/wordpress"
       docker_image_tag: "latest"
       execute_commands:
@@ -69,14 +69,14 @@
       setup_commands:
         - "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ON_CHANGE_AT_PATH"
       trigger_condition_paths:
         - "themes/example-theme"
       shell: "BASH"
     - action: "Prepare WordPress test environment"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/wordpress"
       docker_image_tag: "latest"
       execute_commands:
@@ -108,12 +108,12 @@
         - "apt update"
         - "apt install -y rsync subversion"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ALWAYS"
       shell: "BASH"
     - action: "phpunit plugin"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/wordpress"
       docker_image_tag: "latest"
       execute_commands:
@@ -143,13 +143,13 @@
             host: "memcached"
             port: 11211
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ALWAYS"
       shell: "BASH"
       run_next_parallel: true
     - action: "phpunit theme"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/wordpress"
       docker_image_tag: "latest"
       execute_commands:
@@ -179,69 +179,69 @@
             host: "memcached"
             port: 11211
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ALWAYS"
       shell: "BASH"
     - action: "npm audit: plugin"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/node"
       docker_image_tag: "16"
       execute_commands:
         - "cd plugins/example-plugin"
-        - "if [[ -f package.json ]]; then npm audit --audit-level=high --production --cache /buddy/alley-buddy-demo/.npm; fi"
+        - "if [[ -f package.json ]]; then npm audit --audit-level=high --production --cache /taggart/alley-buddy-demo/.npm; fi"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ALWAYS"
       shell: "BASH"
       run_next_parallel: true
     - action: "npm audit: theme"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/node"
       docker_image_tag: "16"
       execute_commands:
         - "cd themes/example-theme"
-        - "if [[ -f package.json ]]; then npm audit --audit-level=high --production --cache /buddy/alley-buddy-demo/.npm; fi"
+        - "if [[ -f package.json ]]; then npm audit --audit-level=high --production --cache /taggart/alley-buddy-demo/.npm; fi"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ALWAYS"
       shell: "BASH"
     - action: "npm ci: update plugin"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/node"
       docker_image_tag: "16"
       execute_commands:
         - "cd plugins/example-plugin"
-        - "npm ci --cache /buddy/alley-buddy-demo/.npm"
+        - "npm ci --cache /taggart/alley-buddy-demo/.npm"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ALWAYS"
       shell: "BASH"
       run_next_parallel: true
     - action: "npm ci: update theme"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/node"
       docker_image_tag: "16"
       execute_commands:
         - "cd themes/example-theme"
-        - "npm ci --cache /buddy/alley-buddy-demo/.npm"
+        - "npm ci --cache /taggart/alley-buddy-demo/.npm"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ALWAYS"
       shell: "BASH"
     - action: "npm run lint: plugin"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/node"
       docker_image_tag: "16"
       execute_commands:
         - "cd plugins/example-plugin"
         - "npm run lint"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ON_CHANGE_AT_PATH"
       trigger_condition_paths:
         - "plugins/example-plugin"
@@ -249,28 +249,28 @@
       run_next_parallel: true
     - action: "npm run lint: theme"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/node"
       docker_image_tag: "16"
       execute_commands:
         - "cd themes/example-theme"
         - "npm run lint"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ON_CHANGE_AT_PATH"
       trigger_condition_paths:
         - "themes/example-theme"
       shell: "BASH"
     - action: "npm run stylelint: plugin"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/node"
       docker_image_tag: "16"
       execute_commands:
         - "cd plugins/example-plugin"
         - "npm run stylelint"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ON_CHANGE_AT_PATH"
       trigger_condition_paths:
         - "plugins/example-plugin"
@@ -278,28 +278,28 @@
       run_next_parallel: true
     - action: "npm run stylelint: theme"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/node"
       docker_image_tag: "16"
       execute_commands:
         - "cd themes/example-theme"
         - "npm run stylelint"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ON_CHANGE_AT_PATH"
       trigger_condition_paths:
         - "themes/example-theme"
       shell: "BASH"
     - action: "npm run test: plugin"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/node"
       docker_image_tag: "16"
       execute_commands:
         - "cd plugins/example-plugin"
         - "npm run test"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ON_CHANGE_AT_PATH"
       trigger_condition_paths:
         - "plugins/example-plugin"
@@ -307,28 +307,28 @@
       run_next_parallel: true
     - action: "npm run test: theme"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/node"
       docker_image_tag: "16"
       execute_commands:
         - "cd themes/example-theme"
         - "npm run test"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ON_CHANGE_AT_PATH"
       trigger_condition_paths:
         - "themes/example-theme"
       shell: "BASH"
     - action: "npm run build: plugin"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/node"
       docker_image_tag: "16"
       execute_commands:
         - "cd plugins/example-plugin"
         - "npm run build"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ON_CHANGE_AT_PATH"
       trigger_condition_paths:
         - "plugins/example-plugin"
@@ -336,26 +336,26 @@
       run_next_parallel: true
     - action: "npm run build: theme"
       type: "BUILD"
-      working_directory: "/buddy/alley-buddy-demo"
+      working_directory: "/taggart/alley-buddy-demo"
       docker_image_name: "library/node"
       docker_image_tag: "16"
       execute_commands:
         - "cd themes/example-theme"
         - "npm run build"
       volume_mappings:
-        - "/:/buddy/alley-buddy-demo"
+        - "/:/taggart/alley-buddy-demo"
       trigger_condition: "ON_CHANGE_AT_PATH"
       trigger_condition_paths:
         - "themes/example-theme"
       shell: "BASH"
   variables:
     - key: "COMPOSER_HOME"
-      value: "/buddy/alley-buddy-demo/.composer"
+      value: "/taggart/alley-buddy-demo/.composer"
     - key: "WP_CORE_DIR"
-      value: "/buddy/alley-buddy-demo/.buddy-tests/wordpress"
+      value: "/taggart/alley-buddy-demo/.buddy-tests/wordpress"
     - key: "WP_MULTISITE"
       value: "0"
     - key: "WP_TESTS_SKIP_INSTALL"
       value: "1"
     - key: "WP_TESTS_DIR"
-      value: "/buddy/alley-buddy-demo/.buddy-tests/wordpress-tests-lib"
+      value: "/taggart/alley-buddy-demo/.buddy-tests/wordpress-tests-lib"
